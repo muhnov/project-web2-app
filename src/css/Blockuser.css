@@ -15,6 +15,28 @@
     margin-bottom: 20px;
 }
 
+.user-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.refresh-button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.refresh-button:hover {
+    background-color: #0056b3;
+}
+
 .user-list {
     display: flex;
     flex-direction: column;
@@ -53,24 +75,47 @@
     font-size: 0.9rem;
 }
 
-.toggle-button {
+.delete-button {
     padding: 10px 20px;
     font-size: 0.9rem;
     color: #fff;
+    background-color: #dc3545;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.toggle-button:hover {
-    opacity: 0.9;
+.delete-button:hover {
+    background-color: #c82333;
 }
 
-.toggle-button.blocked {
-    background-color: #dc3545;
+.update-form {
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 400px;
 }
 
-.toggle-button:not(.blocked) {
+.update-form input,
+.update-form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.update-form button {
     background-color: #28a745;
+    color: white;
+    cursor: pointer;
+}
+
+.update-form button:hover {
+    background-color: #218838;
 }

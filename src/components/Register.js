@@ -1,84 +1,66 @@
-import React, { useState, useContext } from 'react';
+// Frontend: src/components/Register.js
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { AuthContext } from '../contexts/AuthContext';
 import '../css/Register.css';
 
 const Register = () => {
-    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    const { login } = useContext(AuthContext);
 
     const handleRegister = async (e) => {
         e.preventDefault();
 
         try {
-            const registerResponse = await axios.post('http://localhost:4000/api/register', {
-                username,
-                email,
-                password
+            const response = await fetch('http://localhost:3001/api/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
             });
 
-            if (registerResponse.status === 201) {
-                // Registrasi berhasil, lakukan login otomatis
-                const loginResponse = await axios.post('http://localhost:4000/api/login', {
-                    email,
-                    password
-                });
+            const data = await response.json();
 
-                if (loginResponse.data.isAdmin) {
-                    login(loginResponse.data);
-                    navigate('/dashboard');
-                } else if (loginResponse.data.isUser) {
-                    login(loginResponse.data);
-                    navigate('/home');
-                } else {
-                    alert('Login gagal setelah registrasi');
-                }
+            if (response.ok) {
+                alert('Registrasi berhasil! Silakan login.');
+                navigate('/login');
             } else {
-                alert('Registrasi gagal');
+                alert(data.message || 'Registrasi gagal.');
             }
         } catch (error) {
-            console.error('Error during registration or login:', error);
-            alert('Registrasi atau login gagal');
+            console.error('Error during registration:', error);
+            alert('Terjadi kesalahan saat registrasi.');
         }
     };
 
     return (
         <div className="register-container">
-            <div className="register-box">
+            <form onSubmit={handleRegister}>
                 <h2>Register</h2>
-                <form onSubmit={handleRegister}>
-                    <label>Username:</label>
-                    <input 
-                        type="text" 
-                        value={username} 
-                        onChange={(e) => setUsername(e.target.value)} 
-                        required 
-                    />
-
+                <div>
                     <label>Email:</label>
-                    <input 
-                        type="email" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                        required 
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
-
+                </div>
+                <div>
                     <label>Password:</label>
-                    <input 
-                        type="password" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
-
-                    <button type="submit">Register</button>
-                    <p>Sudah punya akun? <Link to="/login">Login</Link></p>
-                </form>
-            </div>
+                </div>
+                <button type="submit">Register</button>
+                <p>
+                    Sudah punya akun? <Link to="/login">Login</Link>
+                </p>
+            </form>
         </div>
     );
 };

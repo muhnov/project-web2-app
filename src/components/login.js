@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import '../css/Login.css';
 
 const Login = () => {
@@ -12,21 +11,28 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:4000/api/login', {
-                email,
-                password
+            const response = await fetch('http://localhost:3001/api/login', { // Endpoint login
+                method: 'POST', // Menggunakan POST untuk mengirim data login
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }), // Kirim email dan password ke backend
             });
 
-            if (response.data.isAdmin) {
-                navigate('/dashboard');
-            } else if (response.data.isUser) {
-                navigate('/home');
+            const data = await response.json();
+            console.log(data.isAdmin);
+            if (response.ok) {
+                if (data.isAdmin) {
+                    navigate('/dashboard'); // Arahkan ke dashboard jika admin
+                } else {
+                    navigate('/home'); // Arahkan ke home jika pengguna biasa
+                }
             } else {
-                alert('Login gagal, periksa email dan password Anda');
+                alert(data.message || 'Login gagal, periksa email dan password Anda');
             }
         } catch (error) {
             console.error('Error during login:', error);
-            alert('Login gagal, periksa email dan password Anda');
+            alert('Terjadi kesalahan saat login');
         }
     };
 
@@ -36,19 +42,19 @@ const Login = () => {
                 <h2>Login</h2>
                 <form onSubmit={handleLogin}>
                     <label>Email:</label>
-                    <input 
-                        type="email" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                        required 
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
 
                     <label>Password:</label>
-                    <input 
-                        type="password" 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
 
                     <button type="submit">Login</button>
@@ -59,4 +65,4 @@ const Login = () => {
     );
 };
 
-export default Login;   
+export default Login;
